@@ -1,16 +1,24 @@
 const {nanoid} = require('nanoid');
 
 const addBooksHandler = (request, h) => {
-  const {title, tags, body} = request.payload;
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    finished,
+    reading,
+  } = request.payload;
 
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
   const newNBooks = {
-    title,
-    tags,
-    body,
+
     id,
     name,
     year,
