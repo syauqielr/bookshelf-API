@@ -10,11 +10,11 @@ const addBooksHandler = (request, h) => {
     publisher,
     pageCount,
     readPage,
-    reading,
   } = request.payload;
 
   const id = nanoid(16);
   const finished = (pageCount === readPage);
+  const reading = (!finished);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
@@ -42,7 +42,7 @@ const addBooksHandler = (request, h) => {
       status: 'success',
       message: 'Buku berhasil ditambahkan',
       data: {
-        noteId: id,
+        bookId: id,
       },
     });
     response.code(201);
@@ -71,3 +71,5 @@ const addBooksHandler = (request, h) => {
     return response;
   }
 };
+
+module.exports = {addBooksHandler};
