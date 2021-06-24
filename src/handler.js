@@ -1,5 +1,6 @@
 const {nanoid} = require('nanoid');
 const books = require('./books');
+const tempBook = books;
 
 const addBooksHandler = (request, h) => {
   const {
@@ -33,9 +34,6 @@ const addBooksHandler = (request, h) => {
     updatedAt,
   };
 
-  books.push(newNBooks);
-
-  const isSuccess = books.filter((books) => books.id === id).length > 0;
 
   if (!name) {
     const response = h.response({
@@ -52,7 +50,10 @@ const addBooksHandler = (request, h) => {
     });
     response.code(400);
     return response;
-  } else if (isSuccess) {
+  }
+  books.push(newNBooks);
+  const isSuccess = books.filter((books) => books.id === id).length > 0;
+  if (isSuccess) {
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
@@ -72,12 +73,19 @@ const addBooksHandler = (request, h) => {
   }
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books,
-  },
-});
+const getAllBooksHandler = () => {
+  const newBooks = [];
+  for (const book of tempBook) {
+    newBooks.push({id: book.id, name: book.name, publisher: book.publisher});
+  }
+  const books = newBooks;
+  return {
+    status: 'success',
+    data: {
+      books,
+    },
+  };
+};
 
 const getBooksByIdHandler = (request, h) => {
   const {id} = request.params;
@@ -139,7 +147,7 @@ const editBooksByIdHandler = (request, h) => {
       status: 'fail',
       message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
-    response.code(500);
+    response.code(404);
     return response;
   } else if (index !== -1) {
     books[index] = {
