@@ -73,12 +73,35 @@ const addBooksHandler = (request, h) => {
   }
 };
 
-const getAllBooksHandler = () => {
+const getAllBooksHandler = (request, h) => {
   const newBooks = [];
   for (const book of tempBook) {
     newBooks.push({id: book.id, name: book.name, publisher: book.publisher});
   }
   const books = newBooks;
+
+  if (request.query.reading) {
+    console.log(request.query.reading);
+    if (request.query.reading=0) {
+      const books = newBooks.filter((n) => n.reading = 0);
+      console.log(books);
+      return {
+        status: 'success',
+        data: {
+          books,
+        },
+      };
+    } else if (request.query.reading=1) {
+      const books = newBooks.filter((n) => n.reading = 1);
+      console.log(books);
+      return {
+        status: 'success',
+        data: {
+          books,
+        },
+      };
+    }
+  }
   return {
     status: 'success',
     data: {
