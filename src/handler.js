@@ -2,6 +2,7 @@ const {nanoid} = require('nanoid');
 const books = require('./books');
 const tempBook = books;
 
+
 const addBooksHandler = (request, h) => {
   const {
     name,
@@ -19,7 +20,7 @@ const addBooksHandler = (request, h) => {
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
-  const newNBooks = {
+  const newBooks = {
     id,
     name,
     year,
@@ -51,7 +52,7 @@ const addBooksHandler = (request, h) => {
     response.code(400);
     return response;
   }
-  books.push(newNBooks);
+  books.push(newBooks);
   const isSuccess = books.filter((books) => books.id === id).length > 0;
   if (isSuccess) {
     const response = h.response({
@@ -75,25 +76,25 @@ const addBooksHandler = (request, h) => {
 
 const getAllBooksHandler = (request, h) => {
   const newBooks = [];
-  for (const book of tempBook) {
-    newBooks.push({id: book.id, name: book.name, publisher: book.publisher});
-  }
-  const books = newBooks;
-
   if (request.query.reading) {
-    console.log(request.query.reading);
-    if (request.query.reading=0) {
-      const books = newBooks.filter((n) => n.reading = 0);
-      console.log(books);
+    if (request.query.reading==='0') {
+      const temp = tempBook.filter((n) => n.reading === false);
+      const books = temp.map((book) => {
+        const {id, name, publisher} = book;
+        return {id, name, publisher};
+      });
       return {
         status: 'success',
         data: {
           books,
         },
       };
-    } else if (request.query.reading=1) {
-      const books = newBooks.filter((n) => n.reading = 1);
-      console.log(books);
+    } else if (request.query.reading==='1') {
+      const temp = tempBook.filter((n) => n.reading === true);
+      const books = temp.map((book) => {
+        const {id, name, publisher} = book;
+        return {id, name, publisher};
+      });
       return {
         status: 'success',
         data: {
@@ -102,6 +103,10 @@ const getAllBooksHandler = (request, h) => {
       };
     }
   }
+  for (const book of tempBook) {
+    newBooks.push({id: book.id, name: book.name, publisher: book.publisher});
+  }
+  const books = newBooks;
   return {
     status: 'success',
     data: {
